@@ -1,46 +1,14 @@
 import { useState, useEffect } from "react";
-import io from "socket.io-client";
 import BandAdd from "./components/BandAdd";
 import BandList from "./components/BandList";
 import React from "react";
-
-const connectSocketSerer = () => {
-  // LOCAL
-  // const socket = io("http://localhost:8080/", {
-  //   path: "/projects/bands/socket.io",
-  //   transports: ["websocket"],
-  // });
-
-  // PROD
-  const socket = io("https://www.bmosoluciones.com/", {
-    path: "/projects/concurso-server/socket.io",
-    // transports: ["websocket"],
-  });
-
-  return socket;
-};
+import { useSocket } from "./hooks/useSocket";
 
 function App() {
-  const [socket] = useState(connectSocketSerer());
-  const [online, setOnline] = useState(false);
   const [bands, setBands] = useState([]);
 
-  useEffect(() => {
-    setOnline(socket.connected);
-  }, [socket]);
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log(`connect`);
-      setOnline(true);
-    });
-  }, [socket]);
-
-  useEffect(() => {
-    socket.on("disconnect", () => {
-      setOnline(false);
-    });
-  }, [socket]);
+  // const { socket, online } = useSocket("https://www.bmosoluciones.com/");
+  const { socket, online } = useSocket("http://localhost:8080/");
 
   useEffect(() => {
     socket.on("current-bands", (bands) => {

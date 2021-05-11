@@ -1,9 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useContext, useRef } from "react";
+import { SocketContext } from "../context/SocketContex";
 
-const BandAdd = (props) => {
+const BandAdd = () => {
   const refForm = useRef();
 
-  const { crearBanda } = props;
+  const { socket } = useContext(SocketContext);
+
+  const crearBanda = (nombre) => {
+    socket.emit("nueva-banda", { nombre });
+  };
 
   const onSubmit = (e) => {
     e.preventDefault();
